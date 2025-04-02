@@ -6,9 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,18 +32,20 @@ class MainActivity : ComponentActivity() {
             val categories = remember { mutableStateOf(listOf<Category>()) }
             val products = remember { mutableStateOf(listOf<Product>()) }
             val error = remember { mutableStateOf<String?>(null) }
+            val isLoading = remember { mutableStateOf(true) } // Состояние загрузки
 
             // Загружаем данные из Firebase
-            loadDataFromFirebase(categories, products, error)
+            loadDataFromFirebase(categories, products, error, isLoading)
 
-            App(categories.value, products.value, error.value)
+            App(categories.value, products.value, error.value, isLoading.value)
         }
     }
 
     private fun loadDataFromFirebase(
         categoriesState: androidx.compose.runtime.MutableState<List<Category>>,
         productsState: androidx.compose.runtime.MutableState<List<Product>>,
-        errorState: androidx.compose.runtime.MutableState<String?>
+        errorState: androidx.compose.runtime.MutableState<String?>,
+        isLoadingState: androidx.compose.runtime.MutableState<Boolean>
     ) {
         try {
             val database = Firebase.database.reference
@@ -56,11 +58,17 @@ class MainActivity : ComponentActivity() {
                     val categories = snapshot.children.mapNotNull { it.getValue(Category::class.java) }
                     Log.d("MainActivity", "Loaded categories: $categories")
                     categoriesState.value = categories
+
+                    // Проверяем, загружены ли обе ветки
+                    if (productsState.value.isNotEmpty()) {
+                        isLoadingState.value = false
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("MainActivity", "Error loading categories: ${error.message}")
                     errorState.value = "Ошибка загрузки категорий: ${error.message}"
+                    isLoadingState.value = false
                 }
             })
 
@@ -71,79 +79,81 @@ class MainActivity : ComponentActivity() {
                     val products = snapshot.children.mapNotNull { it.getValue(Product::class.java) }
                     Log.d("MainActivity", "Loaded products: $products")
                     productsState.value = products
+
+                    // Проверяем, загружены ли обе ветки
+                    if (categoriesState.value.isNotEmpty()) {
+                        isLoadingState.value = false
+                    }
                 }
 
                 override fun onCancelled(error: DatabaseError) {
                     Log.e("MainActivity", "Error loading products: ${error.message}")
                     errorState.value = "Ошибка загрузки продуктов: ${error.message}"
+                    isLoadingState.value = false
                 }
             })
         } catch (e: Exception) {
             Log.e("MainActivity", "Exception in loadDataFromFirebase: ${e.message}", e)
             errorState.value = "Исключение при загрузке данных: ${e.message}"
+            isLoadingState.value = false
         }
     }
 
     @Composable
-    private fun App(categories: List<Category>, products: List<Product>, error: String?) {
-        if (error != null) {
-            // Показываем ошибку
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = error)
-            }
-        } else if (categories.isEmpty() || products.isEmpty()) {
-            // Показываем индикатор загрузки
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            val navController = rememberNavController()
-            val cartViewModel = viewModel<CartViewModel>()
-            val catalogueViewModel = viewModel<CatalogueViewModel>()
+    private fun App(categories: List<Category>, products: List<Product>, error: String?, isLoading: Boolean) {
+        val navController = rememberNavController()
 
-            NavHost(navController = navController, startDestination = "splash") {
-                composable("splash") {
-                    SplashScreen(navController)
-                }
-                composable("catalogue") {
-                    CatalogueScreen(
-                        navController = navController,
-                        categories = categories,
-                        products = products,
-                        cartViewModel = cartViewModel,
-                        catalogueViewModel = catalogueViewModel
-                    )
-                }
-//                composable("item/{productId}") { backStackEntry ->
-//                    val productId = backStackEntry.arguments?.getString("productId")
-//                    val product = products.firstOrNull { it.id.toString() == productId }
-//                    if (product != null) {
-//                        ItemScreen(
-//                            product = product,
-//                            cartViewModel = cartViewModel,
-//                            navController = navController
-//                        )
-//                    } else {
-//                        Log.e("MainActivity", "Product not found for ID: $productId")
+        NavHost(navController = navController, startDestination = "splash") {
+            composable("splash") {
+                // Показываем SplashScreen, пока данные загружаются
+                SplashScreen(
+                    navController = navController,
+                    isLoading = isLoading,
+                    error = error,
+                    onDataLoaded = {
+                        // Переходим на каталог, когда данные загружены
+                        navController.navigate("catalogue") {
+                            popUpTo("splash") { inclusive = true }
+                        }
+                    }
+                )
+            }
+            composable("catalogue") {
+                CatalogueScreen(
+                    navController = navController,
+                    categories = categories,
+                    products = products,
+                    cartViewModel = viewModel(),
+                    catalogueViewModel = viewModel()
+                )
+            }
+//            composable("item/{productId}") { backStackEntry ->
+//                val productId = backStackEntry.arguments?.getString("productId")
+//                val product = products.firstOrNull { it.id.toString() == productId }
+//                if (product != null) {
+//                    ItemScreen(
+//                        product = product,
+//                        cartViewModel = viewModel(),
+//                        navController = navController
+//                    )
+//                } else {
+//                    Box(
+//                        modifier = Modifier.fillMaxSize(),
+//                        contentAlignment = Alignment.Center
+//                    ) {
+//                        Text(text = "Продукт с ID $productId не найден")
 //                    }
 //                }
-//                composable("cart") {
-//                    CartScreen(
-//                        navController = navController,
-//                        cartViewModel = cartViewModel
-//                    )
-//                }
-//                composable("celebrate") {
-//                    CelebrateScreen(navController)
-//                }
+//            }
+//            composable("cart") {
+//                CartScreen(
+//                    navController = navController,
+//                    cartViewModel = viewModel()
+//                )
+//            }
+//            composable("celebrate") {
+//                CelebrateScreen(navController)
 //            }
         }
-    }
     }
 }

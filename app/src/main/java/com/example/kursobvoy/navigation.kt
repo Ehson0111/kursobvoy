@@ -10,19 +10,19 @@ import androidx.navigation.compose.composable
 import com.example.kursobvoy.Screens.SplashScreen
 
 
-@Composable
-fun Navigation(navController: NavHostController) {
-    NavHost(
-        navController = navController,
-        startDestination = Screen.Splash.route
-    ) {
-        composable(
-            route =Screen.Splash.route
-        ){
-            SplashScreen(
-                navController=navController
-            )
-        }
-
-   }
-}
+//@Composable
+//fun Navigation(navController: NavHostController) {
+//    NavHost(
+//        navController = navController,
+//        startDestination = Screen.Splash.route
+//    ) {
+//        composable(
+//            route =Screen.Splash.route
+//        ){
+//            SplashScreen(
+//                navController=navController
+//            )
+//        }
+//
+//   }
+//}
