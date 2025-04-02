@@ -21,11 +21,8 @@ fun Navigation(navController: NavHostController) {
         ){
             SplashScreen(
                 navController=navController
-
             )
         }
 
-
-
-    }
+   }
 }

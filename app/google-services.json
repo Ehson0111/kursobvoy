@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "192138593485",
+    "project_id": "kursovoy-73d3f",
+    "storage_bucket": "kursovoy-73d3f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192138593485:android:6539b6dc2929c42bb65584",
+        "android_client_info": {
+          "package_name": "com.example.kursobvoy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAs8Kn4Ia4o1CeeSKILQlb0fN9LF7t8jXOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

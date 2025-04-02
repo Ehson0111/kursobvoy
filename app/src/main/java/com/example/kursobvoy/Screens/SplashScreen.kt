@@ -29,7 +29,7 @@ fun SplashScreen(navController: NavController) {
     var animationFinished by remember { mutableStateOf(false) }
 
     LaunchedEffect(animationFinished) {
-        delay(2000)
+        delay(4000)
         animationFinished = true
         navController.navigate("catalogue")
     }

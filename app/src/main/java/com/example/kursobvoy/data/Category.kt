@@ -1,7 +1,11 @@
 package com.example.kursobvoy.Screens
 
-data class Category(
-    val id: Int,
-    val name: String
-)
+import com.google.firebase.database.IgnoreExtraProperties
 
+@IgnoreExtraProperties
+data class Category(
+    val id: Int = 0,
+    val name: String = ""
+) {
+    constructor() : this(0, "")
+}

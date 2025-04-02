@@ -2,9 +2,14 @@ plugins {
 //    alias(libs.plugins.android.application)
 //    alias(libs.plugins.kotlin.android)
 //
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-kapt")
+//    id("com.android.application")
+//    id("org.jetbrains.kotlin.android")
+//    id("kotlin-kapt")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.gms)
+
+
 }
 
 android {
@@ -53,7 +58,15 @@ android {
     }
 }
 
-dependencies {   implementation("androidx.compose.ui:ui:1.5.1")
+dependencies {
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+
+    implementation ("com.google.firebase:firebase-database:21.0.0") // Для Realtime Database
+    implementation ("io.coil-kt:coil-compose:2.7.0") // Для загрузки изображ
+
+    implementation("androidx.compose.ui:ui:1.5.1")
     implementation("androidx.compose.material:material:1.5.1")
     implementation("androidx.compose.foundation:foundation:1.5.1")
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.1")
@@ -84,6 +97,7 @@ dependencies {   implementation("androidx.compose.ui:ui:1.5.1")
     // Coil (или другая библиотека для загрузки изображений): Для загрузки и отображения изображений блюд:
     implementation("io.coil-kt:coil:2.4.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation(libs.firebase.database.ktx)
 
     // Preview
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.1")

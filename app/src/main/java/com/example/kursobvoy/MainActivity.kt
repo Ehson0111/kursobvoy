@@ -1,134 +1,149 @@
 package com.example.kursobvoy
 
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.view.WindowCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.kursobvoy.Screens.CartViewModel
-import com.example.kursobvoy.Screens.CatalogueScreen
-import com.example.kursobvoy.Screens.CatalogueViewModel
-import com.example.kursobvoy.Screens.Category
-import com.example.kursobvoy.Screens.Product
-import com.example.kursobvoy.Screens.SplashScreen
-import com.example.kursobvoy.theme.KursobvoyTheme
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.kursobvoy.Screens.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
-//
-//class MainActivity : ComponentActivity() {
-//
-////    private var categories: List<Category> = emptyList()
-////    private var products: List<Product> = emptyList()
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
-//        setContent {
-//            val navController = rememberNavController()
-//            KursobvoyTheme {
-//                Navigation(navController = navController)
-//
-//            }
-//        }
-//    }
-//}
-
-
-@ExperimentalFoundationApi
 class MainActivity : ComponentActivity() {
-
-    private var categories: List<Category> = emptyList()
-    private var products: List<Product> = emptyList()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(window, true)
-
-        val categoriesInputStream = resources.openRawResource(R.raw.categories)
-        val categoriesJson = categoriesInputStream.bufferedReader().use { it.readText() }
-
-        val productsInputStream = resources.openRawResource(R.raw.products)
-        val productsJson = productsInputStream.bufferedReader().use { it.readText() }
-
-        categories = loadCategoriesFromJson(categoriesJson)
-        products = loadProductsFromJson(productsJson)
-
         setContent {
-            App(categories, products)
+            val categories = remember { mutableStateOf(listOf<Category>()) }
+            val products = remember { mutableStateOf(listOf<Product>()) }
+            val error = remember { mutableStateOf<String?>(null) }
+
+            // Загружаем данные из Firebase
+            loadDataFromFirebase(categories, products, error)
+
+            App(categories.value, products.value, error.value)
         }
     }
 
-    private fun loadCategoriesFromJson(jsonString: String): List<Category> {
-        val listType = object : TypeToken<List<Category>>() {}.type
-        return Gson().fromJson(jsonString, listType)
-    }
+    private fun loadDataFromFirebase(
+        categoriesState: androidx.compose.runtime.MutableState<List<Category>>,
+        productsState: androidx.compose.runtime.MutableState<List<Product>>,
+        errorState: androidx.compose.runtime.MutableState<String?>
+    ) {
+        try {
+            val database = Firebase.database.reference
+            Log.d("MainActivity", "Firebase database reference initialized")
 
-    private fun loadProductsFromJson(jsonString: String): List<Product> {
-        val listType = object : TypeToken<List<Product>>() {}.type
-        val products = Gson().fromJson<List<Product>>(jsonString, listType)
+            // Загрузка категорий
+            database.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d("MainActivity", "Categories snapshot: $snapshot")
+                    val categories = snapshot.children.mapNotNull { it.getValue(Category::class.java) }
+                    Log.d("MainActivity", "Loaded categories: $categories")
+                    categoriesState.value = categories
+                }
 
-        for (product in products) { }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("MainActivity", "Error loading categories: ${error.message}")
+                    errorState.value = "Ошибка загрузки категорий: ${error.message}"
+                }
+            })
 
-        return products
+            // Загрузка продуктов
+            database.child("products").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    Log.d("MainActivity", "Products snapshot: $snapshot")
+                    val products = snapshot.children.mapNotNull { it.getValue(Product::class.java) }
+                    Log.d("MainActivity", "Loaded products: $products")
+                    productsState.value = products
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("MainActivity", "Error loading products: ${error.message}")
+                    errorState.value = "Ошибка загрузки продуктов: ${error.message}"
+                }
+            })
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Exception in loadDataFromFirebase: ${e.message}", e)
+            errorState.value = "Исключение при загрузке данных: ${e.message}"
+        }
     }
 
     @Composable
-    private fun App(categories: List<Category>, products: List<Product>) {
-        var navController = rememberNavController()
-        var cartViewModel = viewModel<CartViewModel>()
-        var catalogueViewModel = viewModel<CatalogueViewModel>()
+    private fun App(categories: List<Category>, products: List<Product>, error: String?) {
+        if (error != null) {
+            // Показываем ошибку
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = error)
+            }
+        } else if (categories.isEmpty() || products.isEmpty()) {
+            // Показываем индикатор загрузки
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            val navController = rememberNavController()
+            val cartViewModel = viewModel<CartViewModel>()
+            val catalogueViewModel = viewModel<CatalogueViewModel>()
 
-        NavHost(navController = navController, startDestination = "splash") {
-            composable("splash") {
-                SplashScreen(navController)
-//                window.statusBarColor = Color(0xFFF15412).toArgb()
-//                window.navigationBarColor = Color(0xFFF15412).toArgb()
-            }
-            composable("catalogue") {
-                CatalogueScreen(
-                    navController = navController,
-                    categories = categories,
-                    products = products,
-                    cartViewModel = cartViewModel,
-                    catalogueViewModel = catalogueViewModel
-                )
-                window.statusBarColor = Color(0xFFFFFFFF).toArgb()
-                window.navigationBarColor = Color(0x1E000000).toArgb()
-                window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-            }
-//            composable("item/{productId}") { backStackEntry ->
-//                val productId = backStackEntry.arguments?.getString("productId")
-//                val product = products.firstOrNull { it.id.toString() == productId }
-//                if (product != null) {
-//                    ItemScreen(product = product, cartViewModel = cartViewModel, navController = navController)
+            NavHost(navController = navController, startDestination = "splash") {
+                composable("splash") {
+                    SplashScreen(navController)
+                }
+                composable("catalogue") {
+                    CatalogueScreen(
+                        navController = navController,
+                        categories = categories,
+                        products = products,
+                        cartViewModel = cartViewModel,
+                        catalogueViewModel = catalogueViewModel
+                    )
+                }
+//                composable("item/{productId}") { backStackEntry ->
+//                    val productId = backStackEntry.arguments?.getString("productId")
+//                    val product = products.firstOrNull { it.id.toString() == productId }
+//                    if (product != null) {
+//                        ItemScreen(
+//                            product = product,
+//                            cartViewModel = cartViewModel,
+//                            navController = navController
+//                        )
+//                    } else {
+//                        Log.e("MainActivity", "Product not found for ID: $productId")
+//                    }
+//                }
+//                composable("cart") {
+//                    CartScreen(
+//                        navController = navController,
+//                        cartViewModel = cartViewModel
+//                    )
+//                }
+//                composable("celebrate") {
+//                    CelebrateScreen(navController)
 //                }
 //            }
-//            composable("cart") {
-//                CartScreen(
-//                    navController = navController,
-//                    cartViewModel = cartViewModel
-//                )
-//            }
-//            composable("celebrate") {
-//                CelebrateScreen(navController, applicationContext)
-//            }
         }
-    }    }
-
+    }
+    }
+}
