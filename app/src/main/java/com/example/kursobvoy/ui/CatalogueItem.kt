@@ -244,6 +244,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.kursobvoy.R
 
@@ -277,18 +278,28 @@ fun CatalogueItem(navController: NavController, product: Product, cartViewModel:
         ) {
             Column(
             ) {
-                Image(
-                    painter = if (product.image.equals("1.jpg")) rememberAsyncImagePainter(product.image) else rememberAsyncImagePainter(
-                        product.image
-                    ),
-                    contentDescription = null,
+//                Image(
+//                    painter = if (product.image.equals("1.jpg")) rememberAsyncImagePainter(product.image) else rememberAsyncImagePainter(
+//                        product.image
+//                    ),
+//                    contentDescription = null,
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(160.dp)
+//                        .clip(shape = RoundedCornerShape(8.dp)),
+//                    contentScale = ContentScale.FillHeight
+//                )
+                AsyncImage(
+                    model = product.image, // URL из базы данных
+                    contentDescription = product.name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(160.dp)
                         .clip(shape = RoundedCornerShape(8.dp)),
-                    contentScale = ContentScale.FillHeight
+                    contentScale = ContentScale.FillHeight,
+//                    placeholder = painterResource(R.drawable.img_product),
+//                    error = painterResource(R.drawable.img_product)
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
