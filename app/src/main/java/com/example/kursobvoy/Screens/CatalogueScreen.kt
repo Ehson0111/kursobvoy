@@ -95,6 +95,7 @@ fun CatalogueScreen(
     val darkOverlayAlphaBg by animateFloatAsState(targetValue = if (isBottomSheetOpen) 0.6f else 0.0f, label = "")
     val bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
 
+    //сотояние ныжнего листа
     LaunchedEffect(isBottomSheetOpen) {
         if (isBottomSheetOpen) {
             bottomSheetState.expand()
@@ -281,7 +282,6 @@ fun CatalogueScreen(
                                 modifier = Modifier
                                     .align(Center)
                             )
-
                         }
 
                         if (selectedFilters.isNotEmpty()) {

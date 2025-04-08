@@ -278,17 +278,6 @@ fun CatalogueItem(navController: NavController, product: Product, cartViewModel:
         ) {
             Column(
             ) {
-//                Image(
-//                    painter = if (product.image.equals("1.jpg")) rememberAsyncImagePainter(product.image) else rememberAsyncImagePainter(
-//                        product.image
-//                    ),
-//                    contentDescription = null,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .height(160.dp)
-//                        .clip(shape = RoundedCornerShape(8.dp)),
-//                    contentScale = ContentScale.FillHeight
-//                )
                 AsyncImage(
                     model = product.image, // URL из базы данных
                     contentDescription = product.name,
