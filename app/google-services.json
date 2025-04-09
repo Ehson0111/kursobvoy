@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "192138593485",
+    "firebase_url": "https://kursovoy-73d3f-default-rtdb.firebaseio.com",
     "project_id": "kursovoy-73d3f",
     "storage_bucket": "kursovoy-73d3f.firebasestorage.app"
   },
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAs8Kn4Ia4o1CeeSKILQlb0fN9LF7t8jXOI"
+          "current_key": "AIzaSyAs8Kn4Ia4o1CeeSKILQlbfN9LF7t8jXOI"
         }
       ],
       "services": {

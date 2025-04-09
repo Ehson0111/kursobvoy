@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +21,6 @@ import com.airbnb.lottie.compose.LottieClipSpec
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.kursobvoy.R
-
 @Composable
 fun SplashScreen(
     navController: NavController,
@@ -30,36 +30,38 @@ fun SplashScreen(
 ) {
     // Если загрузка завершена и нет ошибки, переходим на каталог
     LaunchedEffect(isLoading, error) {
-        if (!isLoading) {
-            if (error == null) {
-                onDataLoaded() // Переходим на каталог
-            }
+        if (!isLoading && error == null) {
+            onDataLoaded()
         }
     }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        content = {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                if (error != null) {
-                    // Показываем ошибку, если она есть
-                    Text(text = error)
-                } else {
-                    // Показываем анимацию, пока данные загружаются
-                    ComposeLottieAnimation(
-                        modifier = Modifier.align(alignment = Alignment.CenterHorizontally)
-                    )
-                }
-            }
-        },
         backgroundColor = Color(0xFFFFFFFF)
-    )
+    ) { innerPadding ->  // Получаем innerPadding от Scaffold
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)  // Используем полученный padding
+                .padding(16.dp),  // Добавляем дополнительный отступ
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            if (error != null) {
+                Text(
+                    text = error,
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            } else {
+                ComposeLottieAnimation(
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .size(200.dp)  // Добавил явный размер для анимации
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -72,14 +74,14 @@ fun ComposeLottieAnimation(modifier: Modifier) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash_animation))
 
     if (composition == null) {
-        Log.e("SplashScreen", "Lottie composition failed to load")
+        Text("Loading...")  // Fallback на случай ошибки загрузки
         return
     }
 
     LottieAnimation(
         modifier = modifier,
         composition = composition,
-        iterations = Int.MAX_VALUE, // Зацикливаем анимацию, пока данные загружаются
+        iterations = Int.MAX_VALUE,
         clipSpec = clipSpecs
     )
 }

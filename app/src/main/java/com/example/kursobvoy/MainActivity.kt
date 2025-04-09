@@ -4,20 +4,19 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.kursobvoy.Screens.*
+import com.example.kursobvoy.Screens.CatalogueScreen
+import com.example.kursobvoy.Screens.Category
+import com.example.kursobvoy.Screens.Product
+import com.example.kursobvoy.Screens.SignIn
+import com.example.kursobvoy.Screens.SignUp
+import com.example.kursobvoy.Screens.SplashScreen
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -52,25 +51,27 @@ class MainActivity : ComponentActivity() {
             Log.d("MainActivity", "Firebase database reference initialized")
 
             // Загрузка категорий
-            database.child("categories").addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.d("MainActivity", "Categories snapshot: $snapshot")
-                    val categories = snapshot.children.mapNotNull { it.getValue(Category::class.java) }
-                    Log.d("MainActivity", "Loaded categories: $categories")
-                    categoriesState.value = categories
+            database.child("categories")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        Log.d("MainActivity", "Categories snapshot: $snapshot")
+                        val categories =
+                            snapshot.children.mapNotNull { it.getValue(Category::class.java) }
+                        Log.d("MainActivity", "Loaded categories: $categories")
+                        categoriesState.value = categories
 
-                    // Проверяем, загружены ли обе ветки
-                    if (productsState.value.isNotEmpty()) {
+                        // Проверяем, загружены ли обе ветки
+                        if (productsState.value.isNotEmpty()) {
+                            isLoadingState.value = false
+                        }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("MainActivity", "Error loading categories: ${error.message}")
+                        errorState.value = "Ошибка загрузки категорий: ${error.message}"
                         isLoadingState.value = false
                     }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e("MainActivity", "Error loading categories: ${error.message}")
-                    errorState.value = "Ошибка загрузки категорий: ${error.message}"
-                    isLoadingState.value = false
-                }
-            })
+                })
 
             // Загрузка продуктов
             database.child("products").addListenerForSingleValueEvent(object : ValueEventListener {
@@ -100,10 +101,25 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun App(categories: List<Category>, products: List<Product>, error: String?, isLoading: Boolean) {
+    private fun App(
+        categories: List<Category>,
+        products: List<Product>,
+        error: String?,
+        isLoading: Boolean
+    ) {
         val navController = rememberNavController()
 
         NavHost(navController = navController, startDestination = "splash") {
+            composable("SignUp") {
+                SignUp(
+                    navController = navController,
+                )
+            }
+            composable("SignIn") {
+                SignIn(
+                    navController = navController,
+                )
+            }
             composable("splash") {
                 // Показываем SplashScreen, пока данные загружаются
                 SplashScreen(

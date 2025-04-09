@@ -18,9 +18,15 @@ firebaseDatabaseVersion = "21.0.0"
 
 [libraries]
 
-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "bomVersion" }
+#firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "bomVersion" }
+
+
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.5.1" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth-ktx" }  # Добавьте -ktx
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore-ktx" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx" }
+
+#firebase-auth={ module="com.google.firebase:firebase-auth"}
 
 
 

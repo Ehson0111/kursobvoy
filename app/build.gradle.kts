@@ -63,6 +63,9 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
 
+    implementation(libs.firebase.auth)
+
+
     implementation ("com.google.firebase:firebase-database:21.0.0") // Для Realtime Database
     implementation ("io.coil-kt:coil-compose:2.7.0") // Для загрузки изображ
 
@@ -128,3 +131,5 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+apply(plugin = "com.google.gms.google-services")  // Активирует google-services.json
+
