@@ -59,6 +59,10 @@ android {
 }
 
 dependencies {
+
+    implementation ("com.google.maps.android:maps-compose:2.7.2")
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
@@ -101,6 +105,7 @@ dependencies {
     implementation("io.coil-kt:coil:2.4.0")
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation(libs.firebase.database.ktx)
+    implementation(libs.androidx.media3.common.ktx)
 
     // Preview
     debugImplementation("androidx.compose.ui:ui-tooling:1.5.1")

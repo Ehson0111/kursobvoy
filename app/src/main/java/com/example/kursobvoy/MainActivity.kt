@@ -4,15 +4,23 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.kursobvoy.Screens.CartScreen
 import com.example.kursobvoy.Screens.CatalogueScreen
 import com.example.kursobvoy.Screens.Category
+import com.example.kursobvoy.Screens.CelebrateScreen
+import com.example.kursobvoy.Screens.ItemScreen
 import com.example.kursobvoy.Screens.Product
 import com.example.kursobvoy.Screens.SignIn
 import com.example.kursobvoy.Screens.SignUp
@@ -143,33 +151,37 @@ class MainActivity : ComponentActivity() {
                     catalogueViewModel = viewModel()
                 )
             }
-//            composable("item/{productId}") { backStackEntry ->
+            composable("item/{productId}") { backStackEntry ->
 //                val productId = backStackEntry.arguments?.getString("productId")
 //                val product = products.firstOrNull { it.id.toString() == productId }
-//                if (product != null) {
-//                    ItemScreen(
-//                        product = product,
-//                        cartViewModel = viewModel(),
-//                        navController = navController
-//                    )
-//                } else {
-//                    Box(
-//                        modifier = Modifier.fillMaxSize(),
-//                        contentAlignment = Alignment.Center
-//                    ) {
-//                        Text(text = "Продукт с ID $productId не найден")
-//                    }
-//                }
-//            }
-//            composable("cart") {
-//                CartScreen(
-//                    navController = navController,
-//                    cartViewModel = viewModel()
-//                )
-//            }
-//            composable("celebrate") {
-//                CelebrateScreen(navController)
-//            }
+
+                val productId = backStackEntry.arguments?.getString("productId")
+                val product = products.firstOrNull { it.id == productId } // Использу
+
+                if (product != null) {
+                    ItemScreen(
+                        product = product,
+                        cartViewModel = viewModel(),
+                        navController = navController
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(text = "Продукт с ID $productId не найден")
+                    }
+                }
+            }
+            composable("cart") {
+                CartScreen(
+                    navController = navController,
+                    cartViewModel = viewModel()
+                )
+            }
+            composable("celebrate") {
+                CelebrateScreen(navController, applicationContext)
+            }
         }
     }
 }

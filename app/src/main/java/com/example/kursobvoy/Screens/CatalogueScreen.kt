@@ -12,7 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Row////////////////////////////////////////
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -76,10 +76,16 @@ fun CatalogueScreen(
     cartViewModel: CartViewModel,
     catalogueViewModel: CatalogueViewModel
 ) {
-    val cart = cartViewModel.cart
 
-    val totalCost = cart.entries.sumOf { (product, count) -> product.price_current * count/100 }
-    val saleCount = cart.entries.sumOf { (product, count) -> (product.price_old?.times(count) ?: product.price_current.times(count)) /100 }
+
+
+    val cart = cartViewModel.cart
+    val totalCost: Int = cart.entries.sumOf { (product, count) ->
+        product.price_current * count / 100
+    }
+    val saleCount: Int = cart.entries.sumOf { (product, count) ->
+        (product.price_old?.times(count) ?: product.price_current.times(count)) / 100
+    }
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
