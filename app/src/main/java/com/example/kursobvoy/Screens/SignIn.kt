@@ -101,7 +101,7 @@ fun SignIn(navController: NavController) {
                 } else {
                     signIn(auth, email, password,
                         onSuccess = {
-                            navController.navigate("splash") // Переход после успешного входа
+                            navController.navigate("catalogue") // Переход после успешного входа
                         },
                         onError = { error ->
                             errorMessage = error
@@ -115,7 +115,7 @@ fun SignIn(navController: NavController) {
                 contentColor = colorResource(R.color.white)
             )
         ) {
-            Text("Войти")
+            Text("Войти", color = Color.White)
         }
     }
 }

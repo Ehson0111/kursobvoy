@@ -17,10 +17,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.kursobvoy.Screens.CartScreen
+import com.example.kursobvoy.Screens.CartViewModel
 import com.example.kursobvoy.Screens.CatalogueScreen
+import com.example.kursobvoy.Screens.CatalogueViewModel
 import com.example.kursobvoy.Screens.Category
 import com.example.kursobvoy.Screens.CelebrateScreen
 import com.example.kursobvoy.Screens.ItemScreen
+import com.example.kursobvoy.Screens.LandingPage
 import com.example.kursobvoy.Screens.Product
 import com.example.kursobvoy.Screens.SignIn
 import com.example.kursobvoy.Screens.SignUp
@@ -116,29 +119,28 @@ class MainActivity : ComponentActivity() {
         isLoading: Boolean
     ) {
         val navController = rememberNavController()
+        val cartViewModel = viewModel<CartViewModel>() // Создаем один экземпляр
+        val catalogueViewModel = viewModel<CatalogueViewModel>()
 
-        NavHost(navController = navController, startDestination = "splash") {
+//        NavHost(navController = navController, startDestination = "splash") {
+            NavHost(navController = navController, startDestination = "splash") {
             composable("SignUp") {
-                SignUp(
-                    navController = navController,
-                )
+                SignUp(navController = navController)
             }
             composable("SignIn") {
-                SignIn(
-                    navController = navController,
-                )
+                SignIn(navController = navController)
             }
             composable("splash") {
-                // Показываем SplashScreen, пока данные загружаются
                 SplashScreen(
                     navController = navController,
                     isLoading = isLoading,
                     error = error,
                     onDataLoaded = {
-                        // Переходим на каталог, когда данные загружены
-                        navController.navigate("catalogue") {
-                            popUpTo("splash") { inclusive = true }
-                        }
+//                        navController.navigate("catalogue") {
+//                            popUpTo("splash") { inclusive = true }
+//                        }
+
+                        navController.navigate("LandingPage")
                     }
                 )
             }
@@ -147,21 +149,22 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     categories = categories,
                     products = products,
-                    cartViewModel = viewModel(),
-                    catalogueViewModel = viewModel()
+                    cartViewModel = cartViewModel, // Передаем один и тот же экземпляр
+                    catalogueViewModel = catalogueViewModel
                 )
             }
+
+            composable("LandingPage"){
+                LandingPage(navController=navController)
+
+            }
             composable("item/{productId}") { backStackEntry ->
-//                val productId = backStackEntry.arguments?.getString("productId")
-//                val product = products.firstOrNull { it.id.toString() == productId }
-
                 val productId = backStackEntry.arguments?.getString("productId")
-                val product = products.firstOrNull { it.id == productId } // Использу
-
+                val product = products.firstOrNull { it.id.toString() == productId }
                 if (product != null) {
                     ItemScreen(
                         product = product,
-                        cartViewModel = viewModel(),
+                        cartViewModel = cartViewModel, // Передаем тот же экземпляр
                         navController = navController
                     )
                 } else {
@@ -176,7 +179,7 @@ class MainActivity : ComponentActivity() {
             composable("cart") {
                 CartScreen(
                     navController = navController,
-                    cartViewModel = viewModel()
+                    cartViewModel = cartViewModel // Передаем тот же экземпляр
                 )
             }
             composable("celebrate") {

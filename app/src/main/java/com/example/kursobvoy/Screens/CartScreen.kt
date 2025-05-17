@@ -1,5 +1,6 @@
 package com.example.kursobvoy.Screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -48,8 +49,9 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
     val saleCount: Int = cart.entries.sumOf { (product, count) ->
         (product.price_old?.times(count) ?: product.price_current.times(count)) / 100
     }
-// Обновление получения cartItems
-//    val cartItems = cartViewModel.cart.value.entries.toList()
+
+    Log.d("CartScreen", "Cart: $cart, Total cost: $totalCost")
+
     AppTheme {
         Scaffold(
             topBar = {
@@ -71,19 +73,19 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                     backgroundColor = Color.White
                 )
             }
-        ) {
-            it
-            if (totalCost != 0) {
+        ) { paddingValues ->
+            if (totalCost != 0 && cart.isNotEmpty()) {
                 val cartItems = cart.entries.toList()
-                val visibleCartItems = cartItems.filter { (_, itemCount) -> itemCount >= 1 }
+                Log.d("CartScreen", "Cart items: $cartItems")
 
                 LazyVerticalGrid(
                     GridCells.Adaptive(minSize = 340.dp),
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(paddingValues)
                         .padding(bottom = 72.dp)
                 ) {
-                    itemsIndexed(visibleCartItems) { _, (product, itemCount) ->
+                    itemsIndexed(cartItems) { _, (product, itemCount) ->
                         CartItem(
                             product = product,
                             itemCount = itemCount,
@@ -104,7 +106,6 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                             .fillMaxWidth()
                             .background(Color.White)
                     ) {
-
                         Button(
                             onClick = {
                                 navController.navigate("celebrate")
@@ -137,11 +138,11 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                         }
                     }
                 }
-
             } else {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
+                        .padding(paddingValues)
                 ) {
                     Text(
                         modifier = Modifier

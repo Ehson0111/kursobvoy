@@ -95,50 +95,17 @@ fun CelebrateScreen(navController: NavController, context: Context) {
                                                 .padding(16.dp),
                                             horizontalAlignment = Alignment.CenterHorizontally
                                         ) {
-                                            Text(
-                                                text = "Оцените код на GitHub!",
-                                                fontSize = 18.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                textAlign = TextAlign.Center,
-                                                modifier = Modifier
-                                                    .padding(16.dp),
-                                            )
 
-                                            Button(
-                                                onClick = {
-                                                    val githubLink = "https://github.com/ubisofter/foodies-food-cart-app/"
-                                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubLink))
-                                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                                    context.startActivity(intent)
-                                                          },
-                                                modifier = Modifier
-                                                    .height(72.dp)
-                                                    .fillMaxWidth()
-                                                    .padding(16.dp), colors = ButtonDefaults.buttonColors(Color(0xFFF15412))
-                                            ) {
-                                                Text(text = "На GitHub", color = Color.White, fontWeight = FontWeight.Bold)
-                                            }
+                                            Text("Заказ оформлен")
+                                            Button(onClick = {
+                                                navController.navigate("catalogue")
+                                            }) {
+                                                Text("Назад")
 
-                                            Button(
-                                                onClick = {
-                                                    val githubLink = "https://t.me/brolligator"
-                                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(githubLink))
-                                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                                    context.startActivity(intent)
-                                                          },
-                                                modifier = Modifier
-                                                    .height(56.dp)
-                                                    .fillMaxWidth()
-                                                    .padding(bottom = 16.dp, start = 16.dp, end = 16.dp),
-                                                colors = ButtonDefaults.buttonColors(Color(0xFFF15412))
-                                            ) {
-                                                Text(
-                                                    text = "Пригласить на работу",
-                                                    color = Color.White,
-                                                    fontWeight = FontWeight.Bold
-                                                )
                                             }
                                         }
+
+
                                     }
                                 }
                             }

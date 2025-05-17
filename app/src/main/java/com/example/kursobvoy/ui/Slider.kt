@@ -19,7 +19,7 @@ fun Slider(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(72.dp)
+                .height(80.dp)
                 .horizontalScroll(rememberScrollState())
         ) {
             items.forEach { category ->

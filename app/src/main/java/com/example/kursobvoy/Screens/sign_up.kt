@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,6 +15,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -32,7 +35,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.rpc.context.AttributeContext.Auth
 
 
 @Composable
@@ -43,7 +45,20 @@ fun SignUp(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var createpassword by remember { mutableStateOf("") }
 
+    Row(
+//            Modifier.motionEventSpy {  }
+        modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
+        TextButton(onClick = {
+
+            navController.navigate("catalogue")
+        }) {
+            Text("Пропустить", fontSize = 18.sp, color = colorResource(R.color.button))
+        }
+
+    }
     Column(
         modifier = Modifier
             .padding(start = 50.dp, end = 50.dp)
@@ -54,6 +69,7 @@ fun SignUp(navController: NavController) {
 
 
     ) {
+
         Image(
             contentDescription = "sjdf",
             painter = painterResource(R.drawable.signup),
@@ -99,7 +115,7 @@ fun SignUp(navController: NavController) {
                 .fillMaxWidth()
                 .height(50.dp),
             onClick = {
-                signup(auth,email.trim(),createpassword.trim())
+                signup(auth, email.trim(), createpassword.trim(), navController)
             },
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
@@ -107,26 +123,50 @@ fun SignUp(navController: NavController) {
                 contentColor = colorResource(R.color.white)
             )
         ) {
-            Text("Sign up")
+            Text("Sign up", color = Color.White)
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            TextButton(onClick = {
+                navController.navigate("SignIn")
+            }) {
+                Text("Войти", color = colorResource(R.color.button))
+            }
+
         }
     }
 
 }
 
-private fun signup(auth: FirebaseAuth, email: String, password: String) {
+private fun signup(
+    auth: FirebaseAuth,
+    email: String,
+    password: String,
+    navController: NavController
+) {
     auth.createUserWithEmailAndPassword(email, password)
         .addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Log.d("SignUp", "Успешная регистрация!")
-                // navController.navigate("home") // Перенаправление
+//                 navController.navigate("home") // Перенаправление }
+                navController.navigate("catalogue")
             } else {
+
+
                 val error = when {
                     task.exception is FirebaseAuthInvalidCredentialsException ->
                         "Некорректный email или пароль (минимум 6 символов)"
+
                     task.exception is FirebaseAuthUserCollisionException ->
                         "Этот email уже зарегистрирован"
+
                     task.exception?.message?.contains("API key") == true ->
                         "Ошибка Firebase. Проверьте google-services.json"
+
                     else -> "Ошибка: ${task.exception?.message}"
                 }
                 Log.e("SignUp", error, task.exception)

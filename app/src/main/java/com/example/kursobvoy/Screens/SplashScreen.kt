@@ -2,6 +2,7 @@ package com.example.kursobvoy.Screens
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -37,7 +38,7 @@ fun SplashScreen(
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        backgroundColor = Color(0xFFFFFFFF)
+        backgroundColor = Color.Black
     ) { innerPadding ->  // Получаем innerPadding от Scaffold
         Column(
             modifier = Modifier
@@ -59,6 +60,7 @@ fun SplashScreen(
                         .align(Alignment.CenterHorizontally)
                         .size(200.dp)  // Добавил явный размер для анимации
                 )
+
             }
         }
     }
@@ -71,7 +73,7 @@ fun ComposeLottieAnimation(modifier: Modifier) {
         max = 0.44f
     )
 
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.splash_animation))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.anim1))
 
     if (composition == null) {
         Text("Loading...")  // Fallback на случай ошибки загрузки
