@@ -40,6 +40,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val categories = remember { mutableStateOf(listOf<Category>()) }
+
+
             val products = remember { mutableStateOf(listOf<Product>()) }
             val error = remember { mutableStateOf<String?>(null) }
             val isLoading = remember { mutableStateOf(true) } // Состояние загрузки
@@ -52,7 +54,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun loadDataFromFirebase(
-        categoriesState: androidx.compose.runtime.MutableState<List<Category>>,
+        categoriesState: androidx.compose.runtime.MutableState<List<Category>>,// хранит список категорий товаров
         productsState: androidx.compose.runtime.MutableState<List<Product>>,
         errorState: androidx.compose.runtime.MutableState<String?>,
         isLoadingState: androidx.compose.runtime.MutableState<Boolean>
@@ -64,11 +66,11 @@ class MainActivity : ComponentActivity() {
             // Загрузка категорий
             database.child("categories")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        Log.d("MainActivity", "Categories snapshot: $snapshot")
+                    override fun onDataChange(snapshot: DataSnapshot) {  // Преобразуем данные в список объектов Category
+//                        Log.d("MainActivity", "Categories snapshot: $snapshot")
                         val categories =
-                            snapshot.children.mapNotNull { it.getValue(Category::class.java) }
-                        Log.d("MainActivity", "Loaded categories: $categories")
+                            snapshot.children.mapNotNull { it.getValue(Category::class.java) }  //данные, полученные из Firebase   Преобразуем данные в список категорий
+//                        Log.d("MainActivity", "Loaded categories: $categories")
                         categoriesState.value = categories
 
                         // Проверяем, загружены ли обе ветки
@@ -87,9 +89,9 @@ class MainActivity : ComponentActivity() {
             // Загрузка продуктов
             database.child("products").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    Log.d("MainActivity", "Products snapshot: $snapshot")
+//                    Log.d("MainActivity", "Products snapshot: $snapshot")
                     val products = snapshot.children.mapNotNull { it.getValue(Product::class.java) }
-                    Log.d("MainActivity", "Loaded products: $products")
+//                    Log.d("MainActivity", "Loaded products: $products")
                     productsState.value = products
 
                     // Проверяем, загружены ли обе ветки
@@ -119,7 +121,7 @@ class MainActivity : ComponentActivity() {
         isLoading: Boolean
     ) {
         val navController = rememberNavController()
-        val cartViewModel = viewModel<CartViewModel>() // Создаем один экземпляр
+        val cartViewModel = viewModel<CartViewModel>() // Сохраняет состояние при повороте экрана/изменении конфигурации
         val catalogueViewModel = viewModel<CatalogueViewModel>()
 
 //        NavHost(navController = navController, startDestination = "splash") {

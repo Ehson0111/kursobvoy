@@ -17,6 +17,11 @@ class CartViewModel : ViewModel() {
     }
 
     fun getItemCount(product: Product): Int {
-        return _cart[product] ?: 0
-    }
+        return _cart[product] ?: 0 }
+
+
 }
+
+
+
+

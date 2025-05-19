@@ -78,7 +78,6 @@ fun CatalogueScreen(
 ) {
 
 
-
     val cart = cartViewModel.cart
     val totalCost: Int = cart.entries.sumOf { (product, count) ->
         product.price_current * count / 100
@@ -94,11 +93,16 @@ fun CatalogueScreen(
     var isFilterOpen by remember { mutableStateOf(false) }
     var isSearchActive by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf("") }
-    val filteredProducts = filterProductsByCategory(products, selectedCategory, selectedFilters.toSet(), searchText)
+
+    val filteredProducts =
+        filterProductsByCategory(products, selectedCategory, selectedFilters.toSet(), searchText)
 
     var isBottomSheetOpen by remember { mutableStateOf(false) }
     var darkOverlayAlpha by remember { mutableFloatStateOf(0.0f) }
-    val darkOverlayAlphaBg by animateFloatAsState(targetValue = if (isBottomSheetOpen) 0.6f else 0.0f, label = "")
+    val darkOverlayAlphaBg by animateFloatAsState(
+        targetValue = if (isBottomSheetOpen) 0.6f else 0.0f,
+        label = ""
+    )
     val bottomSheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
 
     //сотояние ныжнего листа
@@ -230,7 +234,9 @@ fun CatalogueScreen(
                             .background(Color(0xFFFFFFFF))
                     ) {
                         TextField(value = searchText,
-                            modifier = Modifier.align(CenterStart).fillMaxHeight()
+                            modifier = Modifier
+                                .align(CenterStart)
+                                .fillMaxHeight()
                                 .padding(top = 16.dp),
                             onValueChange = { searchText = it },
                             colors = TextFieldDefaults.textFieldColors(
@@ -335,13 +341,22 @@ fun CatalogueScreen(
                         }
                     }
                     Slider(
-                        items = categories,
-                        selectedCategory = selectedCategory,
-                        onItemSelected = { category ->
+                        items = categories, // Список категорий для отображения
+                        selectedCategory = selectedCategory, // Текущая выбранная категория
+                        onItemSelected = { category -> // Обработчик выбора
                             selectedCategory = category
                         }
                     )
                 }
+
+//                addToCart(product,-12)
+                ///Если поиск активен, но запрос пуст — подсказка "Введите название".
+                //
+                //Если есть результаты поиска — показываем сетку найденных товаров.
+                //
+                //Если обычный каталог не пуст — стандартная сетка товаров.
+                //
+                //Иначе — сообщение "Таких блюд нет".
 
                 if (filteredProducts.isNotEmpty() && searchText.isEmpty() && isSearchActive) {
                     Box(
@@ -430,7 +445,9 @@ fun CatalogueScreen(
                             Icon(
                                 painter = painterResource(R.drawable.cart),
                                 contentDescription = "Cart",
-                                modifier = Modifier.align(CenterVertically).size(25.dp)
+                                modifier = Modifier
+                                    .align(CenterVertically)
+                                    .size(25.dp)
                                     .padding(end = 8.dp),
                                 tint = Color.White
                             )
