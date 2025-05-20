@@ -24,6 +24,7 @@ import com.example.kursobvoy.Screens.Category
 import com.example.kursobvoy.Screens.CelebrateScreen
 import com.example.kursobvoy.Screens.ItemScreen
 import com.example.kursobvoy.Screens.LandingPage
+import com.example.kursobvoy.Screens.Model
 import com.example.kursobvoy.Screens.Product
 import com.example.kursobvoy.Screens.SignIn
 import com.example.kursobvoy.Screens.SignUp
@@ -121,11 +122,12 @@ class MainActivity : ComponentActivity() {
         isLoading: Boolean
     ) {
         val navController = rememberNavController()
-        val cartViewModel = viewModel<CartViewModel>() // Сохраняет состояние при повороте экрана/изменении конфигурации
+        val cartViewModel =
+            viewModel<CartViewModel>() // Сохраняет состояние при повороте экрана/изменении конфигурации
         val catalogueViewModel = viewModel<CatalogueViewModel>()
 
 //        NavHost(navController = navController, startDestination = "splash") {
-            NavHost(navController = navController, startDestination = "splash") {
+        NavHost(navController = navController, startDestination = "splash") {
             composable("SignUp") {
                 SignUp(navController = navController)
             }
@@ -155,9 +157,15 @@ class MainActivity : ComponentActivity() {
                     catalogueViewModel = catalogueViewModel
                 )
             }
+            composable("Model") {
+                Model(
+                    navController = navController,
 
-            composable("LandingPage"){
-                LandingPage(navController=navController)
+                    )
+            }
+
+            composable("LandingPage") {
+                LandingPage(navController = navController)
 
             }
             composable("item/{productId}") { backStackEntry ->

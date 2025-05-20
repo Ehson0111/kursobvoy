@@ -58,6 +58,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -179,7 +180,7 @@ fun CatalogueScreen(
                                         selectedFilters = updatedFilters
                                     },
                                     modifier = Modifier.padding(end = 16.dp),
-                                    colors = CheckboxDefaults.colors(checkedColor = Color(0xFFF15412))
+                                    colors = CheckboxDefaults.colors(checkedColor =  colorResource(R.color.button))
                                 )
                             }
                         }
@@ -195,7 +196,7 @@ fun CatalogueScreen(
                                 .padding(start = 24.dp, end = 24.dp),
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
-                                backgroundColor = Color(0xFFF15412)
+                                backgroundColor =  colorResource(R.color.button),
                             ),
                             elevation = null
                         ) {
@@ -242,7 +243,7 @@ fun CatalogueScreen(
                             colors = TextFieldDefaults.textFieldColors(
                                 backgroundColor = Color(0xFFFFFFFF),
                                 placeholderColor = Color(0XFF888D91),
-                                leadingIconColor = Color(0xFFF15412),
+                                leadingIconColor = colorResource(R.color.button),
                                 textColor = Color.Black,
                                 focusedIndicatorColor = Color.Transparent,
                                 unfocusedIndicatorColor = Color.Transparent,
@@ -302,9 +303,9 @@ fun CatalogueScreen(
                                     Modifier
                                         .padding(start = 32.dp, top = 10.dp)
                                         .size(16.dp)
-                                        .background(Color(0xFFF15412), CircleShape)
+                                        .background(color = colorResource(R.color.button), CircleShape)
                                 ),
-                                backgroundColor = Color(0xFFF15412)
+                                backgroundColor =  colorResource(R.color.button),
                             ) {
                                 Box(
                                     modifier = Modifier

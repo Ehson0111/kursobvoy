@@ -59,6 +59,12 @@ android {
 }
 
 dependencies {
+///
+    implementation ("io.ktor:ktor-client-android:2.3.7")
+    implementation ("io.ktor:ktor-client-content-negotiation:2.3.7")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation ("com.google.mlkit:translate:17.0.2")
+   //
 
     implementation ("com.google.maps.android:maps-compose:2.7.2")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
