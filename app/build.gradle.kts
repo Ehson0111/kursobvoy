@@ -8,7 +8,10 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.gms)
+    alias(libs.plugins.kotlin.serialization) // ← Плагин для kotlinx.serialization
 
+//    alias(libs.plugins.ser)
+//    id 'kotlin-serialization' // ← Добавь этот плагин
 
 }
 
@@ -59,7 +62,16 @@ android {
 }
 
 dependencies {
-///
+    ///модель
+    implementation(libs.kotlinx.serialization.json) // ← Библиотека для сериализации
+
+    implementation ("io.ktor:ktor-client-core:2.3.7")
+    implementation ("io.ktor:ktor-client-cio:2.3.7")
+    implementation ("io.ktor:ktor-client-content-negotiation:2.3.7")
+    implementation ("io.ktor:ktor-serialization-kotlinx-json:2.3.7")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation ("androidx.activity:activity-compose:1.7.2")
+
     implementation ("io.ktor:ktor-client-android:2.3.7")
     implementation ("io.ktor:ktor-client-content-negotiation:2.3.7")
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")

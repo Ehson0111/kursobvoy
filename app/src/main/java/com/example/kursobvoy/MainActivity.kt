@@ -20,6 +20,7 @@ import com.example.kursobvoy.Screens.CartScreen
 import com.example.kursobvoy.Screens.CartViewModel
 import com.example.kursobvoy.Screens.CatalogueScreen
 import com.example.kursobvoy.Screens.CatalogueViewModel
+//import com.example.kursobvoy.Screens.CatalogueViewModel
 import com.example.kursobvoy.Screens.Category
 import com.example.kursobvoy.Screens.CelebrateScreen
 import com.example.kursobvoy.Screens.ItemScreen
@@ -68,10 +69,10 @@ class MainActivity : ComponentActivity() {
             database.child("categories")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {  // Преобразуем данные в список объектов Category
-//                        Log.d("MainActivity", "Categories snapshot: $snapshot")
+                        Log.d("MainActivity", "Categories snapshot: $snapshot")
                         val categories =
                             snapshot.children.mapNotNull { it.getValue(Category::class.java) }  //данные, полученные из Firebase   Преобразуем данные в список категорий
-//                        Log.d("MainActivity", "Loaded categories: $categories")
+                        Log.d("MainActivity", "Loaded categories: $categories")
                         categoriesState.value = categories
 
                         // Проверяем, загружены ли обе ветки
@@ -90,9 +91,9 @@ class MainActivity : ComponentActivity() {
             // Загрузка продуктов
             database.child("products").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-//                    Log.d("MainActivity", "Products snapshot: $snapshot")
+                    Log.d("MainActivity", "Products snapshot: $snapshot")
                     val products = snapshot.children.mapNotNull { it.getValue(Product::class.java) }
-//                    Log.d("MainActivity", "Loaded products: $products")
+                    Log.d("MainActivity", "Loaded products: $products")
                     productsState.value = products
 
                     // Проверяем, загружены ли обе ветки
@@ -124,8 +125,8 @@ class MainActivity : ComponentActivity() {
         val navController = rememberNavController()
         val cartViewModel =
             viewModel<CartViewModel>() // Сохраняет состояние при повороте экрана/изменении конфигурации
-        val catalogueViewModel = viewModel<CatalogueViewModel>()
-
+//        val catalogueViewModel = viewModel<CatalogueViewModel>()
+        val catalogueViewModel: CatalogueViewModel = viewModel()
 //        NavHost(navController = navController, startDestination = "splash") {
         NavHost(navController = navController, startDestination = "splash") {
             composable("SignUp") {

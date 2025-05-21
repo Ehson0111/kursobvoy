@@ -8,16 +8,19 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.kursobvoy.R
 
 @Composable
 fun CategoryCard(category: Category, selected: Boolean, onCategorySelected: (Category) -> Unit) {
     Card(
-        backgroundColor = if (selected) Color(0xFFF15412) else Color.White,
+        backgroundColor = if (selected)  colorResource(R.color.button) else Color.White,
         modifier = Modifier
             .padding(start = 8.dp, top = 8.dp, bottom = 8.dp)
             .clickable {
+
                 onCategorySelected(category)
             },
         shape = RoundedCornerShape(8.dp)

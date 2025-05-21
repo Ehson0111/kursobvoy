@@ -39,8 +39,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.kursobvoy.R
 
 @Composable
 fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
@@ -114,8 +116,8 @@ fun CartScreen(navController: NavController, cartViewModel: CartViewModel) {
                                 .fillMaxWidth()
                                 .height(56.dp)
                                 .padding(start = 16.dp, end = 16.dp)
-                                .background(Color(0xFFF15412), RoundedCornerShape(8.dp)),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFF15412)),
+                                .background(color = colorResource(R.color.button), RoundedCornerShape(8.dp)),
+                            colors = ButtonDefaults.buttonColors(colorResource(R.color.button)),
                             elevation = null,
                             shape = RoundedCornerShape(8.dp)
                         ) {

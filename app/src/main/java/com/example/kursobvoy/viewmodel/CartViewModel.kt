@@ -1,7 +1,9 @@
 package com.example.kursobvoy.Screens
 
+import android.content.Context
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.lifecycle.ViewModel
+import com.example.kursobvoy.network.ClassificationApi
 
 class CartViewModel : ViewModel() {
     private val _cart = mutableStateMapOf<Product, Int>() // Key: Product, Value: count
@@ -21,7 +23,6 @@ class CartViewModel : ViewModel() {
 
 
 }
-
 
 
 

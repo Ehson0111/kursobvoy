@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -125,7 +126,7 @@ fun CatalogueItem(navController: NavController, product: Product, cartViewModel:
                             Icon(
                                 imageVector = Icons.Default.Remove,
                                 contentDescription = "Remove",
-                                tint = Color(0xFFF15412),
+                                tint = colorResource(R.color.button),
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             )
                         }
@@ -148,7 +149,7 @@ fun CatalogueItem(navController: NavController, product: Product, cartViewModel:
                             Icon(
                                 imageVector = Icons.Default.Add,
                                 contentDescription = "Add",
-                                tint = Color(0xFFF15412),
+                                tint = colorResource(R.color.button),
                                 modifier = Modifier.align(Alignment.CenterVertically)
                             )
                         }

@@ -16,8 +16,13 @@ firebaseDatabaseKtx = "21.0.0"
 firebaseDatabaseVersion = "21.0.0"
 media3CommonKtx = "1.6.0"
 
+serialization = "1.6.0" # Версия kotlinx.serialization, совместимая с Kotlin
+rvmvers='1.9.0'
 
 [libraries]
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+
+#kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
 #firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "bomVersion" }
 
@@ -57,4 +62,13 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
 gms = { id = "com.google.gms.google-services", version.ref = "gmsVersion" }
+
+#ser={id ="kotlin-serialization" }
+
+#jvm={id ="org.jetbrains.kotlin.jvm" ,version.ref="rvmvers"}
+
+#kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+#google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+
 #google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }

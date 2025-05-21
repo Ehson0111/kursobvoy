@@ -4,6 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.gms) apply false
 
+
+//    alias(libs.plugins.jvm) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+
+
 //    alias("com.google.gms.google-services" ) apply false
 
 }
